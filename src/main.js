@@ -1,8 +1,10 @@
 import { createApp } from 'vue/dist/vue.esm-bundler.js'//'vue'
-//import './style.css'
+import './style.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './js/select2.min.css'
 import './js/select2-bootstrap4.min.css'
+import './adminlte.min.css'
+import './fontawesome-pro/css/all.css'
 
 import './js/jquery.min.js'
 import './js/select2.full.min.js'

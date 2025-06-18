@@ -37,7 +37,9 @@ export default {
         }
     },
     mounted() {
-
+        var th = this;
+        let txt = '/รพ-ราชบุรี/dischargeSummary.js'
+        th.loadForm(txt);
     },
     methods: {
         loadForm(compurl) {

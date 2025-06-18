@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bootstrap": "^4.6.2",
+    "bootstrap": "^5.3.3",
     "moment": "^2.30.1",
     "vue": "^3.4.29"
   },
