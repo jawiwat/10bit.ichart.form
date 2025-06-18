@@ -23,22 +23,22 @@ export default {
     data() {
         return {
             val: {
-                name:'',
-                cc:'',
-                hpi:'',
-                Lastvs:{},
+                name: '',
+                cc: '',
+                hpi: '',
+                Lastvs: {},
             },
             //userdt: JSON.parse(localStorage.userdata).FirstName + " " + JSON.parse(localStorage.userdata).LastName,
         };
     },
     props: {
-         // interface method
+        // interface method
         // donot remove
         mode: '',//form,print
         visitid: '',
         rid: '',//formid
-        formdataid:undefined,//formdata id
-        PatientAccess_RID:'',
+        formdataid: undefined,//formdata id
+        PatientAccess_RID: '',
         cuserid: '',
         formtype: '',
         vid: '',
@@ -46,7 +46,7 @@ export default {
     },
     watch: {
     },
-    computed:{
+    computed: {
         user() {
             var local = localStorage.userdata || null;
             return JSON.parse(local);
@@ -65,12 +65,12 @@ export default {
             var th = this;
             th.val = d;
             th.val.createDate = toDateTimeString();
-            if(!th.val.Lastvs){
+            if (!th.val.Lastvs) {
                 th.val.Lastvs = {}
             }
             if (th.mode != 'print') {
                 this.$refs.searchadmisowner.setRawvalue(th.val.phyname);
-                
+
             }
         },
         loaddata: function () {
@@ -80,58 +80,57 @@ export default {
                     th.val.hosname = res.result.name
                 }
             });
-            CallWebAPI('/api/VisitDatas/Searchpatientvisit', JSON.stringify({vid:th.vid}), 'POST', (res) => {
+            CallWebAPI('/api/VisitDatas/Searchpatientvisit', JSON.stringify({ vid: th.vid }), 'POST', (res) => {
                 th.Patient = res
                 th.val.patient = th.Patient.Patient;
                 th.val.hn = th.Patient.HN
-                if(res.DOB){
+                if (res.DOB) {
                     var today = new Date(res.DOB);
-                    var age = new Date().getFullYear()-today.getFullYear();
+                    var age = new Date().getFullYear() - today.getFullYear();
                 }
                 th.val.age = age
                 th.loadArrfirst();
 
-             });
+            });
         },
         processsearchphyresutl: function (data) {
             var res = data.map((x) => {
-              var lname = "";
-              if (x.LastName != null) {
-                lname = x.LastName;
-              }
-              return {
-                id: x.FirstName + " " + lname,
-                text: x.FirstName + " " + lname,
-                data: x,
-              };
+                var lname = "";
+                if (x.LastName != null) {
+                    lname = x.LastName;
+                }
+                return {
+                    id: x.FirstName + " " + lname,
+                    text: x.FirstName + " " + lname,
+                    data: x,
+                };
             });
             return res;
-          },
-          asanamerec: function (data) {
+        },
+        asanamerec: function (data) {
             var th = this
             this.$refs.searchadmisowner.setRawvalue(data.text);
             th.val.asaName = data.text
         },
-        loadArrfirst:function(){
+        loadArrfirst: function () {
             var th = this;
-            if(th.formdataid != undefined && th.formdataid){
+            if (th.formdataid != undefined && th.formdataid) {
                 return true
             }
-            CallWebAPI('/api/EMR/loadopdscreenprogress', JSON.stringify({an:th.Patient.AN}), 'POST', (res) => {
-                if(th.formdataid != undefined && th.formdataid){
+            CallWebAPI('/api/EMR/loadopdscreenprogress', JSON.stringify({ an: th.Patient.AN }), 'POST', (res) => {
+                if (th.formdataid != undefined && th.formdataid) {
                     return true
                 }
-                if(res && res.status){
-                    if(res.result.length>0)
-                    {
+                if (res && res.status) {
+                    if (res.result.length > 0) {
                         th.val.cc = res.result[0].cc
                         th.val.hpi = res.result[0].hpi
                     }
                 }
-                if(th.Patient.LastVitalsign){
+                if (th.Patient.LastVitalsign) {
                     th.val.Lastvs = th.Patient.LastVitalsign;
                 }
-             });
+            });
 
         },
         savedata: function () {
@@ -147,8 +146,8 @@ export default {
                 CreateByID: this.cuserid,
                 Type: this.formtype,
                 Visit_RID: this.vid,
-                DateUpdate:moment().format("YYYY-MM-DDtHH:mm:ss"),
-                
+                DateUpdate: moment().format("YYYY-MM-DDtHH:mm:ss"),
+
             }
 
             var th = this;
