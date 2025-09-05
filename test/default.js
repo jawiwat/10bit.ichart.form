@@ -7,7 +7,8 @@ export default {
                 <h4 class="text-center font-weight-bold mt-2">ชื่อฟอร์ม</h4>
             </div>
             <div><!--body-->
-                <select2 v-model="val.phyname" :url="'/api/UserDatas/SearchAll'" class="ml-2 mr-2" minlen="1" sendpropname="kw" :processresult="processsearchphyresutl" @docname="asanamerec"  ref="searchadmisowner"></select2>
+            <label>ชื่อแพทย์</label>
+                <select2 v-model="val.phyname" :url="'/api/UserDatas/SearchAll'" class="ml-2 mr-2" minlen="1" sendpropname="kw" :processresult="processsearchphyresutl" ref="searchadmisowner"></select2>
             </div>
             <div><!--footer -->
                 <div class="text-center"><button class="btn btn-primary mt-2 w-25" style="text-align:center" @click="savedata" type="button"><i class="fa fa-fw fa-save"></i>บันทึกเอกสาร</button></div>
@@ -107,11 +108,6 @@ export default {
             });
             return res;
         },
-        asanamerec: function (data) {
-            var th = this
-            this.$refs.searchadmisowner.setRawvalue(data.text);
-            th.val.asaName = data.text
-        },
         loadArrfirst: function () {
             var th = this;
             if (th.formdataid != undefined && th.formdataid) {
@@ -133,6 +129,9 @@ export default {
             });
 
         },
+        // function to save form data
+        // donot remove
+        // this function will be called when user click save button
         savedata: function () {
             this.val.saveName = this.uname;
             if (this.formdataid != undefined) {
@@ -156,6 +155,10 @@ export default {
             });
 
         },
+        // function to update form data
+        // donot remove
+        // this function will be called when user click save button
+        // this function will update existing form data
         updatedata: function () {
             var req = {
                 FormDB: JSON.stringify(this.val),
