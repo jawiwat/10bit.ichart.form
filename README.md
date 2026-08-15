@@ -20,6 +20,7 @@ This installs:
 | Package | Purpose |
 |---------|---------|
 | `vue` | Vue 3 framework |
+| `vue3-sfc-loader` | Runtime compiler for remote `.vue` forms |
 | `bootstrap` | UI styling |
 | `moment` | Date/time formatting |
 | `vite` | Dev server and build tool |
@@ -52,14 +53,14 @@ npm run preview
 The app includes `TestForm.vue`, a form loader for local development.
 
 1. Open the dev server URL in a browser.
-2. Enter a form module path in the **import form** field (e.g. `/test/default.js`).
-3. Click **import form** to load it dynamically.
-4. Choose **mode**: `form` (editable) or `print` (read-only layout).
-5. Set **VID** (visit ID) to load patient data from the API.
+2. Click a local file chip (`test.vue`, `test.js`, `default.js`) or paste a path and press **โหลดฟอร์ม**.
+3. Switch **กรอกฟอร์ม** / **พิมพ์**. Press Enter in the path field to reload.
+4. Set **VID** to load patient data from the API. Last path, mode, and VID are remembered.
 
 Example paths:
 
 ```
+/test/test.vue
 /test/default.js
 /test/test.js
 /รพ-ราชบุรี/dischargeSummary.js
@@ -90,9 +91,57 @@ localStorage.setItem('Permission', JSON.stringify([
 
 ## Form Development
 
-Each form is a Vue options component exported as `default` from a `.js` file.
+Each form is a Vue options component exported as `default` from a `.js` or `.vue` file.
 
-### Minimal structure
+- **`.js`** — options object with a `template` string (legacy / iChart Form Builder)
+- **`.vue`** — Single File Component (`<template>` + `<script>`). Local files are compiled by Vite. Remote `.vue` files are compiled at runtime with `vue3-sfc-loader`.
+
+See `test/test.vue` for a working SFC example. Forms should keep the Options API so `setdata` / `savedata` / `loaddata` remain callable by the host.
+
+### Minimal structure (`.vue`)
+
+```vue
+<template>
+  <div class="bg-white">
+    <div v-if="mode == 'form'">
+      <!-- editable form UI -->
+    </div>
+    <div v-if="mode == 'print'">
+      <!-- print layout -->
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      val: {}
+    }
+  },
+  props: {
+    mode: '',
+    visitid: '',
+    rid: '',
+    formdataid: undefined,
+    PatientAccess_RID: '',
+    cuserid: '',
+    formtype: '',
+    vid: '',
+  },
+  mounted() {
+    this.loaddata()
+  },
+  methods: {
+    setdata(d) { /* load saved form data */ },
+    loaddata() { /* fetch patient / hospital data */ },
+    savedata() { /* create new record */ },
+    updatedata() { /* update existing record */ },
+  }
+}
+</script>
+```
+
+### Minimal structure (`.js`)
 
 ```js
 export default {
@@ -260,6 +309,7 @@ ichart-form/
 │   ├── main.js             # App bootstrap, global imports
 │   ├── App.vue             # Root component
 │   ├── Commonfunction.js   # Shared utilities (CallWebAPI, dates, etc.)
+│   ├── formLoader.ts       # Dynamic .js / .vue form loader
 │   ├── style.css           # Global styles
 │   ├── adminlte.min.css    # AdminLTE theme
 │   ├── components/
@@ -270,7 +320,8 @@ ichart-form/
 │   └── js/                 # jQuery, Select2 (add manually)
 ├── test/
 │   ├── default.js          # Example form with Select2
-│   └── test.js             # Example form (minimal)
+│   ├── test.js             # Example form (JS module)
+│   └── test.vue            # Example form (Vue SFC)
 └── dist/                   # Production build output
 ```
 
@@ -288,7 +339,7 @@ In production, forms are typically served from:
 /api/FormBuilders/vue/getform/{Formbuilder_RID}
 ```
 
-or hospital-specific paths such as `/รพ-{hospital}/{formName}.js`.
+or hospital-specific paths such as `/รพ-{hospital}/{formName}.js` or `/รพ-{hospital}/{formName}.vue`.
 
 ## Scripts Reference
 

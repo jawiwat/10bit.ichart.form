@@ -1,5 +1,4 @@
-export default {
-    template: `
+<template>
 <div class="bg-white">
     <div v-if="mode=='form'">
         <div>
@@ -124,7 +123,10 @@ export default {
         </div>
     </div>
 </div>
-`,
+</template>
+
+<script>
+export default {
     data() {
         return {
             val: {
@@ -143,21 +145,17 @@ export default {
                 hpi: '',
                 Lastvs: {},
             },
-            //userdt: JSON.parse(localStorage.userdata).FirstName + " " + JSON.parse(localStorage.userdata).LastName,
         };
     },
     props: {
-        // interface method
-        // donot remove
-        mode: '',//form,print
+        mode: '',
         visitid: '',
-        rid: '',//formid
-        formdataid: undefined,//formdata id
+        rid: '',
+        formdataid: undefined,
         PatientAccess_RID: '',
         cuserid: '',
         formtype: '',
         vid: '',
-        //----------------------
     },
     watch: {
     },
@@ -177,8 +175,6 @@ export default {
         this.loaddata();
     },
     methods: {
-        // interface method 
-        // donot remove
         setdata: function (d) {
             var th = this;
             th.val = d;
@@ -274,9 +270,6 @@ export default {
             });
 
         },
-        // function to save form data
-        // donot remove
-        // this function will be called when user click save button
         savedata: function () {
             this.val.saveName = this.uname;
             if (this.formdataid != undefined) {
@@ -300,10 +293,6 @@ export default {
             });
 
         },
-        // function to update form data
-        // donot remove
-        // this function will be called when user click save button
-        // this function will update existing form data
         updatedata: function () {
             var req = {
                 FormDB: JSON.stringify(this.val),
@@ -315,6 +304,6 @@ export default {
                 th.$emit('formsaved', res);
             })
         }
-        //----------------------------
     }
 }
+</script>

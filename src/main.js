@@ -1,4 +1,4 @@
-import { createApp } from 'vue/dist/vue.esm-bundler.js'//'vue'
+import { createApp } from 'vue'
 import './style.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './js/select2.min.css'
@@ -19,4 +19,10 @@ let app =  createApp(App);
 window.app = app;
 app.component('select2',select2);
 window.moment = moment;
+app.config.globalProperties.toDateString = window.toDateString
+app.config.globalProperties.toDateTimeString = window.toDateTimeString
+app.config.globalProperties.toTimeString = window.toTimeString
+app.config.globalProperties.getAgeYMD = window.getAgeYMD
+app.config.globalProperties.getYearAge = window.getYearAge
+app.config.globalProperties.moment = moment
 app.mount('#app')

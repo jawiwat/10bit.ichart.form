@@ -49,11 +49,14 @@ export default {
     },
     computed: {
         user() {
-            var local = localStorage.userdata || null;
-            return JSON.parse(local);
+            try {
+                return JSON.parse(localStorage.userdata || 'null') || {}
+            } catch (e) {
+                return {}
+            }
         },
         uname() {
-            return this.user.FirstName + ' ' + (this.user.LastName || '');
+            return ((this.user.FirstName || '') + ' ' + (this.user.LastName || '')).trim()
         }
     },
     mounted: function () {
@@ -82,6 +85,9 @@ export default {
                 }
             });
             CallWebAPI('/api/VisitDatas/Searchpatientvisit', JSON.stringify({ vid: th.vid }), 'POST', (res) => {
+                if (!res || res === false) {
+                    return
+                }
                 th.Patient = res
                 th.val.patient = th.Patient.Patient;
                 th.val.hn = th.Patient.HN
